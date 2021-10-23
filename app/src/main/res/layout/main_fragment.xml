@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainFragment">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/take_photo_text"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="25dp"
+        android:id="@+id/button_take_photo"
+        />
+
+    <ImageView
+        android:layout_margin="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:id="@+id/image"
+        android:contentDescription="@string/image_description" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:id="@+id/generating_layout"
+        android:visibility="gone"
+        >
+
+        <ProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/progress_circular"
+            android:layout_centerHorizontal="true"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#444"
+            android:layout_below="@id/progress_circular"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:text="@string/generating_mesh_text"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/white"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
