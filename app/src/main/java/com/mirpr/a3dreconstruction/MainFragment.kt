@@ -132,6 +132,11 @@ class MainFragment : Fragment() {
         sceneViewerIntent.data = uri
 
         sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox")
-        startActivity(sceneViewerIntent)
+
+        if (sceneViewerIntent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(sceneViewerIntent)
+        } else {
+            Toast.makeText(requireContext(), "No Intent available to handle action", Toast.LENGTH_SHORT).show()
+        }
     }
 }
