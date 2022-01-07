@@ -1,31 +1,33 @@
 package com.mirpr.a3dreconstruction
 
-import android.content.ContentResolver
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 
-import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
-
+import com.mirpr.a3dreconstruction.networking.HttpClient
+import com.mirpr.a3dreconstruction.networking.HttpClientCallback
+import okhttp3.Response
 
 class MainViewModel : ViewModel() {
-
-
-    private val imageProcessor = ImageProcessor()
     val meshLiveData = MutableLiveData<Uri>()
     /**
      * Method for passing the Uri of the taken picture to be processed
      */
-    fun send(contentResolver: ContentResolver, uri: Uri) {
-        //TODO process image
-        // we need to determine what the next step is
-        // get image bitmap - do stuff with image - return the mesh?
-
-        // launch processing on new thread so it doesn't block the UI thread
+    fun send(data: List<String>) {
         Thread{
-            imageProcessor.process(MediaStore.Images.Media.getBitmap(contentResolver , uri), meshLiveData)
+            Log.d("Mohi",data.toString())
+            HttpClient.sendImageToProcess(data, object: HttpClientCallback {
+                override fun onFailure() {
+                    Log.d("Mohi","fail")
+                }
+
+                override fun onResponse(response: Response) {
+                    Log.d("Mohi","$response")
+                }
+
+            })
         }.start()
     }
-
 
 }

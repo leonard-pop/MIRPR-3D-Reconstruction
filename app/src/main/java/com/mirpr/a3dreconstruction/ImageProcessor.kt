@@ -27,24 +27,24 @@ class ImageProcessor {
      */
     private fun doStuff(bitmap: Bitmap): Uri {
 
-        var pixelMatrix = ""
-        for(i in 0..100) {
-            for (j in 0..100) {
-                val colour: Int = bitmap.getPixel(i, j)
+//        var pixelMatrix = ""
+//        for(i in 0..100) {
+//            for (j in 0..100) {
+//                val colour: Int = bitmap.getPixel(i, j)
+//
+//                val red = Color.red(colour)
+//                val blue = Color.blue(colour)
+//                val green = Color.green(colour)
+//                val alpha = Color.alpha(colour)
+//
+//                pixelMatrix += " [$red, $blue, $green, $alpha]"
+//            }
+//            pixelMatrix += '\n'
+//        }
+//        Log.d("PIXEL_MATRIX", pixelMatrix)
 
-                val red = Color.red(colour)
-                val blue = Color.blue(colour)
-                val green = Color.green(colour)
-                val alpha = Color.alpha(colour)
-
-                pixelMatrix += " [$red, $blue, $green, $alpha]"
-            }
-            pixelMatrix += '\n'
-        }
-        Log.d("PIXEL_MATRIX", pixelMatrix)
-
-        Thread.sleep(2000)
+        //Thread.sleep(2000)
         //return Uri.EMPTY
-        return Uri.parse("https://arvr.google.com/scene-viewer/1.0?file=https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
+        return Uri.parse("https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
     }
 }

@@ -18,7 +18,10 @@ import androidx.lifecycle.lifecycleScope
 import android.content.Intent
 import android.widget.RelativeLayout
 import android.widget.Toast
+import java.io.InputStream
+import java.io.ByteArrayOutputStream
 
+import android.util.Base64
 
 class MainFragment : Fragment() {
 
@@ -32,11 +35,13 @@ class MainFragment : Fragment() {
     private lateinit var image: ImageView
     // button for taking a photo
     private lateinit var buttonTakePhoto: Button
+    private lateinit var buttonShow3D: Button
     // layout for displaying loading info
     private lateinit var generatingLayout: RelativeLayout
-
     private lateinit var file: File
     private lateinit var uri: Uri
+
+    private var noTakenImages = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +56,7 @@ class MainFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         image = view.findViewById(R.id.image)
         buttonTakePhoto = view.findViewById(R.id.button_take_photo)
+        buttonShow3D = view.findViewById(R.id.button_show_3d)
         generatingLayout = view.findViewById(R.id.generating_layout)
 
         // create the file where the image will be stored
@@ -67,18 +73,23 @@ class MainFragment : Fragment() {
         buttonTakePhoto.setOnClickListener {
             takeImage()
         }
+        buttonShow3D.setOnClickListener {
+            displaySTL()
+        }
 
         // subscribe to viewmodel livedata
         viewModel.meshLiveData.observe(viewLifecycleOwner, {
             // when an Uri is posted to the livedata, the mesh corresponding to it is displayed
             generatingLayout.visibility = View.GONE
             if(it!=Uri.EMPTY) {
-                displaySTL(it)
+                displaySTL()
             }else{
                 Toast.makeText(requireContext(), "Something went horribly wrong!", Toast.LENGTH_SHORT).show()
             }
         })
     }
+
+    private var imageList = arrayListOf<String>()
 
     // send intent for taking a picture
     private val takeImageResult = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
@@ -87,18 +98,32 @@ class MainFragment : Fragment() {
                 image.setImageURI(uri)
                 // do other stuff with the Uri
                 Log.d(TAG, uri.toString())
-
+                val iStream: InputStream? = requireActivity().contentResolver.openInputStream(uri)
+                val inputData: ByteArray? = iStream?.let { it1 -> getBytes(it1) }
+                val data = Base64.encodeToString(inputData, Base64.DEFAULT)
+                imageList.add(data)
+                noTakenImages++
+                if(noTakenImages<3){
+                    takeImage()
+                }else{
+                    noTakenImages=0
+                    viewModel.send(imageList)
+                    imageList= arrayListOf()
+                }
                 generatingLayout.visibility = View.VISIBLE
-                viewModel.send(requireActivity().contentResolver, uri)
-
             }
         }
     }
 
-
-    // sent intent for selecting picture from camera - might use this later as well
-    private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { image.setImageURI(uri) }
+    private fun getBytes(inputStream: InputStream): ByteArray {
+        val byteBuffer = ByteArrayOutputStream()
+        val bufferSize = 1024
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while (inputStream.read(buffer).also { len = it } != -1) {
+            byteBuffer.write(buffer, 0, len)
+        }
+        return byteBuffer.toByteArray()
     }
 
     private var latestTmpUri: Uri? = null
@@ -113,10 +138,6 @@ class MainFragment : Fragment() {
         }
     }
 
-    // might be used later
-    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
-
-
     private fun getTmpFileUri(): Uri {
         val tmpFile = File.createTempFile("tmp_image_file", ".png", requireActivity().cacheDir).apply {
             createNewFile()
@@ -127,16 +148,19 @@ class MainFragment : Fragment() {
     }
 
     // method for viewing a 3D model (uses the Google AR thingy stuff app)
-    private fun displaySTL(uri: Uri){
+    private fun displaySTL(){
         val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
-        sceneViewerIntent.data = uri
 
-        sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox")
+        // the GLTF file is obtain remotely from the server
+        sceneViewerIntent.data =
+            Uri.parse("https://arvr.google.com/scene-viewer/1.0")
+                .buildUpon()
+                .appendQueryParameter("file","http://192.168.1.6:5000/model")
+                .appendQueryParameter("mode", "3d_only")
+                .build()
+        Log.d("MIRPR_DEBUG_TAG",sceneViewerIntent.data.toString())
+        sceneViewerIntent.setPackage("com.google.ar.core")
 
-        if (sceneViewerIntent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivity(sceneViewerIntent)
-        } else {
-            Toast.makeText(requireContext(), "No Intent available to handle action", Toast.LENGTH_SHORT).show()
-        }
+        startActivity(sceneViewerIntent)
     }
 }
