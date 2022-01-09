@@ -16,7 +16,7 @@ interface HttpClientCallback{
 }
 
 object HttpClient {
-    private const val baseServerURL = "http://192.168.1.6:5000/"
+    const val baseServerURL = "http://192.168.1.6:5000/"
     private val okHttpClient = OkHttpClient()
 
     fun sendImageToProcess(data: List<String>, httpClientCallback: HttpClientCallback){

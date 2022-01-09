@@ -20,10 +20,12 @@ class MainViewModel : ViewModel() {
             HttpClient.sendImageToProcess(data, object: HttpClientCallback {
                 override fun onFailure() {
                     Log.d("Mohi","fail")
+                    meshLiveData.postValue(Uri.EMPTY)
                 }
 
                 override fun onResponse(response: Response) {
                     Log.d("Mohi","$response")
+                    meshLiveData.postValue(Uri.parse(response.message))
                 }
 
             })

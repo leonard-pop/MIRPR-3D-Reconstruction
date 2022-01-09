@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">3DReconstruction</string>
-    <string name="generating_mesh_text">The mesh is being generated...</string>
+    <string name="generating_mesh_text">The mesh is being generated…</string>
     <string name="image_description">image_description</string>
     <string name="take_photo_text">Take photo</string>
     <string name="show_in_3d">Show 3D</string>
+    <string name="take_left_pic">Take a left profile picture (-50°)</string>
+    <string name="take_frontal_pic">Take a frontal picture</string>
+    <string name="take_right_pic">Take a right profile picture (+50°)</string>
 </resources>

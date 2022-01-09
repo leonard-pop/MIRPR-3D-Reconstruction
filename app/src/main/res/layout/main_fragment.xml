@@ -5,6 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".MainFragment">
 
+    <TextView
+        android:id="@+id/instruction_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="100dp"
+        android:layout_alignParentTop="true"
+        android:textAlignment="center"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:text="@string/take_left_pic"
+        />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,29 +50,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:paddingBottom="200dp"
         android:orientation="vertical"
         android:id="@+id/generating_layout"
         android:visibility="gone"
         >
 
+        <TextView
+            android:id="@+id/generating_mesh_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:background="#444"
+            android:text="@string/generating_mesh_text"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/white"
+            android:textSize="20sp" />
+
         <ProgressBar
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_below="@id/generating_mesh_text"
             android:id="@+id/progress_circular"
             android:layout_centerHorizontal="true"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#444"
-            android:layout_below="@id/progress_circular"
-            android:layout_marginTop="10dp"
-            android:textSize="20sp"
-            android:text="@string/generating_mesh_text"
-            android:textColor="@color/black"
-            android:textColorHighlight="@color/white"
-            />
+
 
     </RelativeLayout>
 

@@ -8,31 +8,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import java.io.File
 
 import androidx.lifecycle.lifecycleScope
 import android.content.Intent
-import android.widget.RelativeLayout
-import android.widget.Toast
 import java.io.InputStream
 import java.io.ByteArrayOutputStream
 
 import android.util.Base64
+import android.widget.*
+import com.mirpr.a3dreconstruction.networking.HttpClient
 
 class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
+        const val modelURL = "${HttpClient.baseServerURL}/model"
         const val TAG = "LOG_TAG"
     }
 
     private lateinit var viewModel: MainViewModel
     // view for displaying the taken image
     private lateinit var image: ImageView
+    private lateinit var instructionText : TextView
     // button for taking a photo
     private lateinit var buttonTakePhoto: Button
     private lateinit var buttonShow3D: Button
@@ -58,7 +58,7 @@ class MainFragment : Fragment() {
         buttonTakePhoto = view.findViewById(R.id.button_take_photo)
         buttonShow3D = view.findViewById(R.id.button_show_3d)
         generatingLayout = view.findViewById(R.id.generating_layout)
-
+        instructionText = view.findViewById(R.id.instruction_text)
         // create the file where the image will be stored
         file = File(requireActivity().filesDir, "picFromCamera")
 
@@ -82,7 +82,8 @@ class MainFragment : Fragment() {
             // when an Uri is posted to the livedata, the mesh corresponding to it is displayed
             generatingLayout.visibility = View.GONE
             if(it!=Uri.EMPTY) {
-                displaySTL()
+                //displaySTL()
+                Toast.makeText(requireContext(), "The mesh was generated! Press SHOW 3D to visualise it", Toast.LENGTH_LONG).show()
             }else{
                 Toast.makeText(requireContext(), "Something went horribly wrong!", Toast.LENGTH_SHORT).show()
             }
@@ -104,13 +105,19 @@ class MainFragment : Fragment() {
                 imageList.add(data)
                 noTakenImages++
                 if(noTakenImages<3){
-                    takeImage()
+                    //takeImage()
+                    Toast.makeText(requireContext(), "You need to take ${3-noTakenImages} more picture"+if(noTakenImages<2)"s" else "", Toast.LENGTH_SHORT).show()
+                    when(noTakenImages){
+                        1->instructionText.setText(R.string.take_frontal_pic)
+                        2->instructionText.setText(R.string.take_right_pic)
+                    }
                 }else{
                     noTakenImages=0
                     viewModel.send(imageList)
                     imageList= arrayListOf()
+                    generatingLayout.visibility = View.VISIBLE
+                    instructionText.setText(R.string.take_left_pic)
                 }
-                generatingLayout.visibility = View.VISIBLE
             }
         }
     }
@@ -119,7 +126,7 @@ class MainFragment : Fragment() {
         val byteBuffer = ByteArrayOutputStream()
         val bufferSize = 1024
         val buffer = ByteArray(bufferSize)
-        var len = 0
+        var len: Int
         while (inputStream.read(buffer).also { len = it } != -1) {
             byteBuffer.write(buffer, 0, len)
         }
@@ -155,7 +162,7 @@ class MainFragment : Fragment() {
         sceneViewerIntent.data =
             Uri.parse("https://arvr.google.com/scene-viewer/1.0")
                 .buildUpon()
-                .appendQueryParameter("file","http://192.168.1.6:5000/model")
+                .appendQueryParameter("file", modelURL)
                 .appendQueryParameter("mode", "3d_only")
                 .build()
         Log.d("MIRPR_DEBUG_TAG",sceneViewerIntent.data.toString())
