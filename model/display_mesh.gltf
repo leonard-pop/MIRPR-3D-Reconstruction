@@ -5,17 +5,17 @@
       "byteOffset": 0,
       "componentType": 5126,
       "normalized": false,
-      "count": 2766,
+      "count": 317604,
       "type": "VEC3",
       "max": [
-        5.7808661460876465,
-        2.5064356327056885,
-        -3.4925246238708496
+        1.7692484855651855,
+        2.1286227703094482,
+        2.183931350708008
       ],
       "min": [
-        2.178105354309082,
-        -1.51376211643219,
-        -7.041624546051025
+        -1.7692484855651855,
+        -2.1286227703094482,
+        -2.183931350708008
       ]
     },
     {
@@ -23,32 +23,32 @@
       "byteOffset": 0,
       "componentType": 5126,
       "normalized": false,
-      "count": 2766,
+      "count": 317604,
       "type": "VEC3"
     }
   ],
   "asset": {
-    "generator": "pygltflib@v1.14.5",
+    "generator": "pygltflib@v1.14.6",
     "version": "2.0"
   },
   "bufferViews": [
     {
       "buffer": 0,
       "byteOffset": 0,
-      "byteLength": 33192,
+      "byteLength": 3811248,
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteOffset": 33192,
-      "byteLength": 33192,
+      "byteOffset": 3811248,
+      "byteLength": 3811248,
       "target": 34962
     }
   ],
   "buffers": [
     {
       "uri": "display_mesh.bin",
-      "byteLength": 66384
+      "byteLength": 7622496
     }
   ],
   "meshes": [

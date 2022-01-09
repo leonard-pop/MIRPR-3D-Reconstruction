@@ -2,7 +2,7 @@ from flask import Flask, request
 
 # Flask Constructor
 from GLTFfromSTL import generateGLTFfromSTL
-from main import generateSTL
+from generateSTL import generateSTL
 from processer.stl_to_GLTF_converter import convertSTLtoGLTF
 
 app = Flask(__name__)
