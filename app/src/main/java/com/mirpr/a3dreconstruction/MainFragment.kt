@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream
 import android.util.Base64
 import android.widget.*
 import com.mirpr.a3dreconstruction.networking.HttpClient
+import java.lang.Exception
 
 class MainFragment : Fragment() {
 
@@ -126,7 +127,7 @@ class MainFragment : Fragment() {
         val byteBuffer = ByteArrayOutputStream()
         val bufferSize = 1024
         val buffer = ByteArray(bufferSize)
-        var len: Int
+        var len = 0
         while (inputStream.read(buffer).also { len = it } != -1) {
             byteBuffer.write(buffer, 0, len)
         }
@@ -168,6 +169,10 @@ class MainFragment : Fragment() {
         Log.d("MIRPR_DEBUG_TAG",sceneViewerIntent.data.toString())
         sceneViewerIntent.setPackage("com.google.ar.core")
 
-        startActivity(sceneViewerIntent)
+        try {
+            startActivity(sceneViewerIntent)
+        }catch (e: Exception){
+            Toast.makeText(requireContext(), "AR viewer not supported on this device!", Toast.LENGTH_SHORT).show()
+        }
     }
 }
