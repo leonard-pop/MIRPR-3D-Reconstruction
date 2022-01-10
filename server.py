@@ -25,7 +25,7 @@ def debug():
 
 @app.route("/model", methods=["GET"])
 def getModel():
-    generateGLTFfromSTL()
+
     filename = "model/display_mesh.gltf"
     import codecs
     types_of_encoding = ["utf8", "cp1252"]
@@ -56,7 +56,7 @@ def convert():
 def process():
     import base64
     IMAGE_FILES = []
-    for i in range(1, 4):
+    for i in range(3, -1, -1):
         print(i)
         img_data = request.form["image{}".format(str(i))]
         print(img_data[:10])
@@ -67,6 +67,7 @@ def process():
     print(IMAGE_FILES)
 
     generateSTL(IMAGE_FILES)
+    generateGLTFfromSTL()
     return "received image"
 
 
